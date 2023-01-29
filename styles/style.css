@@ -1,3 +1,7 @@
 .weather-header {
-    background-image: linear-gradient(to right, navy , rgb(0, 206, 206));  
+    background-image: linear-gradient(to right, navy , rgb(0, 206, 206));
+}
+
+.spacer {
+    min-height: 10px;
 }

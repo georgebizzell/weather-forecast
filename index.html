@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <!-- <link rel="stylesheet" href="./styles/reset.css" /> -->
+  <link rel="stylesheet" href="./styles/reset.css" />
   <link rel="stylesheet" href="./styles/style.css" />
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -20,25 +20,32 @@
   <!-- max-width for ultra wide resolutions -->
   <div class="container-fluid" style="max-width: 1400px">
     <div class="row">
-      <aside class="col-lg-3 pb-3">
-        <h2 id="form-heading" class="mt-1 h3 form-label">
+      <aside class="col-lg-3 align-middle pt-3">
+        <h2 id="form-heading" class="mt-1 h4 form-label text-center">
           Search for a City:
         </h2>
-        <form id="search-form" class="form">
-          <div class="form-inline form-group">
+    </div>
+    <div class="row">
+        <form id="search-form" class="form col-lg-3 pb-3">
+          <div class="form-group">
             <div class="input-group">
-              <input class="form-input weather-search" type="text" id="search-input" placeholder="London"
+              <input class="form-input weather-search rounded w-100 mb-2" type="text" id="search-input" placeholder="London"
                 aria-labelledby="form-heading" aria-controls="today forecast" />
-              <div class="input-group-append">
-                <button type="submit" class="btn search-button" id="search-button" aria-label="submit search">
+            </div>
+            <div class="input-group-append">
+                <button type="submit" class="btn search-button btn-info rounded btn-block" id="search-button" aria-label="submit search">
                   Search
                 </button>
                 <hr class="hr weather-hr" />
               </div>
+              <div class = "box border-dark border-bottom spacer">
             </div>
           </div>
-        </form>
-        <div class="list-group" id="history"></div>
+        </div>
+      </form>
+      <div class="list-group" id="history">
+        <!-- Create an array of previous searches and stick it in here -->
+      </div>
       </aside>
 
       <div class="col-lg-9 pb-3">
