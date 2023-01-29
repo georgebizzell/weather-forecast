@@ -17,7 +17,7 @@ var weatherQueryURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + 
 // Example: api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}
 
 
-
+//Search button action function
 $("#search-button").on("click", function(event) {
     event.preventDefault();
 
@@ -59,6 +59,28 @@ $("#search-button").on("click", function(event) {
 
      $("#history").prepend(searchedCity);
 
-        }
+     getWeather(lat, lon);
+
+       }
+    )
+}
+
+// Get Weather (not working) - START AGAIN HERE!
+
+function getWeather (lat, lon) {
+
+    var weatherQueryURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey;
+    
+    console.log(weatherQueryURL);
+
+   // Make an async ajax call to retrieve lat and lon
+   $.ajax({
+     url: weatherQueryURL,
+     method: "GET"
+   }).then(function(response) {
+
+    console.log("Get Weather temp = " + response.list.main.temp);
+
+    }
    )
 }
