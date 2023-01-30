@@ -65,7 +65,7 @@ $("#search-button").on("click", function(event) {
     )
 }
 
-// Get Weather (not working) - START AGAIN HERE!
+// Get Weather working
 
 function getWeather (lat, lon) {
 
@@ -79,7 +79,7 @@ function getWeather (lat, lon) {
      method: "GET"
    }).then(function(response) {
 
-    console.log("Get Weather temp = " + response.list.main.temp);
+    console.log("Temp = " + JSON.stringify(response.list[0].main.temp));
 
     }
    )
