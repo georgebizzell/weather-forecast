@@ -114,10 +114,22 @@ function getWeather (lat, lon) {
 
     $("#today").empty();
 
-    $("#today").append($("<h2>").text(foundCity)).addClass("pb-3");
+    var iconPng = JSON.stringify(response.list[0].weather[0].icon).replaceAll('"', '');
+
+    console.log(iconPng);
+
+    var iconAddress = "http://openweathermap.org/img/wn/" + iconPng + "@2x.png";
+
+    console.log(iconAddress);
+
+    $("#today").append($("<div>").addClass("pl-3 row align-items-center").append($("<h2>").text(foundCity)).append($("<div>").append('<img id="WeatherIcon" src=' + iconAddress + ' />')));
     $("#today").append($("<p>").text("Temp: " + todayTemp + " \u00B0C"));
     $("#today").append($("<p>").text("Wind: " + todayWind + " kph"));
     $("#today").append($("<p>").text("Humidity: " + todayHumidity + "%"));
+
+    getWeatherIcon(JSON.stringify(response.list[0].weather[0].id));
+
+
 
     }
    )

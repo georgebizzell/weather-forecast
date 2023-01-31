@@ -30,3 +30,8 @@ div[class^="col-"] {
     flex-direction: column;
 }
 
+/* https://openweathermap.org/weather-conditions */
+
+#WeatherIcon {
+    max-width: 60px;
+}
