@@ -16,9 +16,11 @@ var weatherQueryURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + 
 
 // Example: api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}
 
+var todayWeather;
 var todayTemp;
 var todayWind;
 var todayHumidity;
+var searchedCity;
 var city;
 
 //Search button action function
@@ -52,17 +54,16 @@ $("#search-button").on("click", function(event) {
      console.log("Lat = " + lat);
      console.log("Lon = " + lon);
 
-     // Storing the rating data
-     var searchHistory = response[0].name;
+     // Storing the search history
+     
+     foundCity = response[0].name;
 
-     console.log("Search history = " + searchHistory);
+     console.log("Search history = " + foundCity);
 
      // Creating an element to have the searched city displayed
-     var searchedCity = $("<li>").addClass("m-1 p-2 border-dark border rounded").text(searchHistory);
+     var foundCityItem = $("<li>").addClass("m-1 p-2 border-dark border rounded").text(foundCity);
 
-     console.log(searchedCity);
-
-     $("#history").prepend(searchedCity);
+     $("#history").prepend(foundCityItem);
 
      getWeather(lat, lon);
 
@@ -88,6 +89,8 @@ function getWeather (lat, lon) {
 
     console.log("Response = " + JSON.stringify(response));
 
+    console.log("Weather = " + JSON.stringify(response.list[0].weather[0].main));
+
     console.log("Temp = " + JSON.stringify(response.list[0].main.temp));
 
     console.log("Wind = " + JSON.stringify(response.list[0].wind.speed));
@@ -96,7 +99,7 @@ function getWeather (lat, lon) {
 
     // Store key values in variables
     
-    
+    todayWeather = JSON.stringify(response.list[0].weather[0].main);
     todayTemp = JSON.stringify(response.list[0].main.temp);
     todayWind = JSON.stringify(response.list[0].wind.speed)
     todayHumidity = JSON.stringify(response.list[0].main.humidity)
@@ -107,14 +110,14 @@ function getWeather (lat, lon) {
 
     // Reset today's forecast for the searched city
 
-    console.log("City = " + city);
+    console.log("City = " + foundCity);
 
     $("#today").empty();
 
-    $("#today").append($("<h2>").text(city)).addClass("pb-3");
-    $("#today").append($("<p>").text("Temp: " + todayTemp + "\u00B0C"));
-    $("#today").append($("<p>").text("Wind: " + todayWind));
-    $("#today").append($("<p>").text("Humidity: " + todayHumidity));
+    $("#today").append($("<h2>").text(foundCity)).addClass("pb-3");
+    $("#today").append($("<p>").text("Temp: " + todayTemp + " \u00B0C"));
+    $("#today").append($("<p>").text("Wind: " + todayWind + " kph"));
+    $("#today").append($("<p>").text("Humidity: " + todayHumidity + "%"));
 
     }
    )
