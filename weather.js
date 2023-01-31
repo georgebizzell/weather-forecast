@@ -16,16 +16,21 @@ var weatherQueryURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + 
 
 // Example: api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}
 
+var todayTemp;
+var todayWind;
+var todayHumidity;
+var city;
 
 //Search button action function
 $("#search-button").on("click", function(event) {
     event.preventDefault();
 
     // This line grabs the input from the textbox
-    var city = $("#search-input").val().trim();
+    city = $("#search-input").val().trim();
  
     // Calling renderButtons which handles the processing of our movie array
     getLatLon(city);
+
   });
 
   function getLatLon(city) {
@@ -41,8 +46,8 @@ $("#search-button").on("click", function(event) {
     console.log(response);
 
      // Retrieve the lat and lon from the response for the city
-     var lat = response[0].lat;
-     var lon = response[0].lon;
+     lat = response[0].lat;
+     lon = response[0].lon;
 
      console.log("Lat = " + lat);
      console.log("Lon = " + lon);
@@ -79,7 +84,37 @@ function getWeather (lat, lon) {
      method: "GET"
    }).then(function(response) {
 
+    // Log the response and key values
+
+    console.log("Response = " + JSON.stringify(response));
+
     console.log("Temp = " + JSON.stringify(response.list[0].main.temp));
+
+    console.log("Wind = " + JSON.stringify(response.list[0].wind.speed));
+
+    console.log("Humidity = " + JSON.stringify(response.list[0].main.humidity));
+
+    // Store key values in variables
+    
+    
+    todayTemp = JSON.stringify(response.list[0].main.temp);
+    todayWind = JSON.stringify(response.list[0].wind.speed)
+    todayHumidity = JSON.stringify(response.list[0].main.humidity)
+
+    todayTemp = (+todayTemp - 273.15)
+
+    todayTemp = Math.round((todayTemp + Number.EPSILON) * 100) / 100
+
+    // Reset today's forecast for the searched city
+
+    console.log("City = " + city);
+
+    $("#today").empty();
+
+    $("#today").append($("<h2>").text(city)).addClass("pb-3");
+    $("#today").append($("<p>").text("Temp: " + todayTemp + "\u00B0C"));
+    $("#today").append($("<p>").text("Wind: " + todayWind));
+    $("#today").append($("<p>").text("Humidity: " + todayHumidity));
 
     }
    )

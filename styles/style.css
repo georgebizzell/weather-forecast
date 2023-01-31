@@ -17,6 +17,7 @@ div[class^="col-"] {
 
 .today {
     min-height: 150px;
+    justify-content: left;
 }
 
 .forecast {
