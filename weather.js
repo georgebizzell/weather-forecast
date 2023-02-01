@@ -107,17 +107,15 @@ $("#search-button").on("click", function(event) {
 
      // De-duplicating the search history by turning it into a Set
 
+     searchHistory.unshift(currentCity);
+
      const setSearchHistory = new Set(searchHistory);
 
      const arraySearchHistory = Array.from(setSearchHistory);
 
-     arraySearchHistory.unshift(currentCity);
-
-     const arraySearchHistorySlice = arraySearchHistory.slice(0, 7);
-
      // Storing the new search history
 
-     localStorage.setItem("searchHistory", JSON.stringify(arraySearchHistorySlice));
+     localStorage.setItem("searchHistory", JSON.stringify(arraySearchHistory));
 
      // Calling display history to refresh the historical search list
 
