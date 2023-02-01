@@ -1,12 +1,24 @@
 # Module 8 Server-Side APIs: Weather Dashboard
 
-## Key features
+## Key additional features
 
 * Historical list only stores unique search values and orders by the most recent first.
 
+## Future work
+
+* Add map
+* Add more forecast detail
+* Improve branding
+
+## Deployment
+
+Github repo: https://github.com/georgebizzell/weather-forecast
+
+Github pages: https://georgebizzell.github.io/weather-forecast/
+
 ## GIF Demo
 
-
+![Gif demo of weather forecast product](https://github.com/georgebizzell/weather-forecast/blob/main/chrome-capture-2023-1-1.gif)
 
 
 ## Your Task
