@@ -23,6 +23,37 @@ var todayHumidity;
 var searchedCity;
 var city;
 
+var searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
+
+const historyArray = [];
+
+var numberofdays = 5;
+
+function displayHistory () {
+
+  $("#history").empty();
+
+  searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
+
+  const setSearchHistory = new Set(searchHistory);
+
+  const arraySearchHistory = Array.from(setSearchHistory);
+
+  const arraySearchHistorySlice = arraySearchHistory.slice(0, 7);
+
+  arraySearchHistorySlice.forEach(renderHistory);
+  
+  function renderHistory(city) {
+
+    var listCity = $("<li>").addClass("historyItem m-1 p-2 border-dark border rounded").text(city);
+
+    $("#history").append(listCity);
+
+  }
+
+}
+
+
 //Search button action function
 $("#search-button").on("click", function(event) {
     event.preventDefault();
@@ -30,12 +61,26 @@ $("#search-button").on("click", function(event) {
     // This line grabs the input from the textbox
     city = $("#search-input").val().trim();
  
-    // Calling renderButtons which handles the processing of our movie array
+    // Calling geocoding function
     getLatLon(city);
 
   });
 
+  //Historical seach button action function
+  $(document).on('click', '.historyItem', function(event) { 
+    event.preventDefault();
+
+    // This line grabs the input from the textbox
+      var city = $(this).html().trim();
+      console.log(city);
+  
+    // Calling geocoding function
+    getLatLon(city);
+    });
+
   function getLatLon(city) {
+
+    console.log("Searched city is = " + city);
 
     var geoQueryURL = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=1&appid=" + apiKey;
     
@@ -54,16 +99,31 @@ $("#search-button").on("click", function(event) {
      console.log("Lat = " + lat);
      console.log("Lon = " + lon);
 
-     // Storing the search history
+     // Retrieving the search search history
      
-     foundCity = response[0].name;
+     currentCity = response[0].name;
 
-     console.log("Search history = " + foundCity);
+     var searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
 
-     // Creating an element to have the searched city displayed
-     var foundCityItem = $("<li>").addClass("m-1 p-2 border-dark border rounded").text(foundCity);
+     // De-duplicating the search history by turning it into a Set
 
-     $("#history").prepend(foundCityItem);
+     const setSearchHistory = new Set(searchHistory);
+
+     const arraySearchHistory = Array.from(setSearchHistory);
+
+     arraySearchHistory.unshift(currentCity);
+
+     const arraySearchHistorySlice = arraySearchHistory.slice(0, 7);
+
+     // Storing the new search history
+
+     localStorage.setItem("searchHistory", JSON.stringify(arraySearchHistorySlice));
+
+     // Calling display history to refresh the historical search list
+
+     displayHistory ();
+  
+     // Getting the weather for the new current city
 
      getWeather(lat, lon);
 
@@ -85,6 +145,7 @@ function getWeather (lat, lon) {
      method: "GET"
    }).then(function(response) {
 
+    var global = response;
     // Log the response and key values
 
     console.log("Response = " + JSON.stringify(response));
@@ -110,9 +171,11 @@ function getWeather (lat, lon) {
 
     // Reset today's forecast for the searched city
 
-    console.log("City = " + foundCity);
+    console.log("City = " + currentCity);
 
     $("#today").empty();
+
+    // Get icon id and remove pesky quotation marks with replace function
 
     var iconPng = JSON.stringify(response.list[0].weather[0].icon).replaceAll('"', '');
 
@@ -122,15 +185,85 @@ function getWeather (lat, lon) {
 
     console.log(iconAddress);
 
-    $("#today").append($("<div>").addClass("pl-3 row align-items-center").append($("<h2>").text(foundCity)).append($("<div>").append('<img id="WeatherIcon" src=' + iconAddress + ' />')));
+    $("#today").append($("<div>").addClass("pl-3 row align-items-center").append($("<h2>").text(currentCity + "  " + moment().format('DD/MM/YYYY') )).append($("<div>").append('<img id="WeatherIcon" src=' + iconAddress + ' />')));
+  
     $("#today").append($("<p>").text("Temp: " + todayTemp + " \u00B0C"));
     $("#today").append($("<p>").text("Wind: " + todayWind + " kph"));
     $("#today").append($("<p>").text("Humidity: " + todayHumidity + "%"));
 
-    getWeatherIcon(JSON.stringify(response.list[0].weather[0].id));
+   forecast(response, numberofdays);
 
-
-
-    }
+      }
    )
+}
+
+function forecast(response, numberofdays) {
+
+  $("#forecast").empty();
+
+  for(i = 0 ; response.list.length ; i++) {
+
+    var date = response.list[i].dt_txt
+    var time = moment(date).format("HH:mm:ss");
+
+    console.log("date = " + date);
+    console.log("time = " + time);
+
+    if (time === "12:00:00")
+    {
+      createForecastDay(date, response, i);
+    }
+
+  }
+}
+
+function createForecastDay(date, response, i) {
+
+  // Date
+
+  date = moment(date).format("DD/MM/YY");
+
+ // console.log(moment().add(i, 'days').format('DD/MM/YYYY')); - Testing moment.js formatting
+  weather = JSON.stringify(response.list[i].weather[0].main);
+
+  // Retrieve temperature and fix to degrees celcius
+  temp = JSON.stringify(response.list[i].main.temp);
+  temp = (+temp - 273.15);
+  temp = Math.round((temp + Number.EPSILON) * 100) / 100
+
+  // Get wind and humidity
+
+  wind = JSON.stringify(response.list[i].wind.speed);
+  humidity = JSON.stringify(response.list[i].main.humidity);
+
+  //Get the correct weather icon
+
+  var forecastIconPng = JSON.stringify(response.list[i].weather[0].icon).replaceAll('"', '');
+
+  var forecastIconAddress = "http://openweathermap.org/img/wn/" + forecastIconPng + "@2x.png";
+
+  // Use JQuery to create all the components
+
+  const dateP = $("<h5>").text(date)
+  const icon = $("<div>").append('<img id="WeatherIcon"' + i + ' src=' + forecastIconAddress + ' />');
+  const tempP = $("<p>").text("Temp: " + temp + " \u00B0C");
+  const windP = $("<p>").text("Wind: " + wind + " kph");
+  const humidityP = $("<p>").text("Humidity: " + humidity + "%");
+
+  // Create the containing div for each day
+
+  const newDiv = $("<div>").addClass("rounded forecast container-fluid col-lg-2 text-center m-2 p-1 bold");
+  
+  // Append to the containing div
+
+  newDiv.append(dateP);
+  newDiv.append(icon);
+  newDiv.append(tempP);
+  newDiv.append(windP);
+  newDiv.append(humidityP);
+
+  //Append to the forecast section
+  
+  $("#forecast").append(newDiv);
+
 }

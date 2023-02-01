@@ -30,8 +30,17 @@ div[class^="col-"] {
     flex-direction: column;
 }
 
+.historyItem{
+    background-color: rgb(240, 240, 239);
+}
+
 /* https://openweathermap.org/weather-conditions */
 
 #WeatherIcon {
     max-width: 60px;
+}
+
+.forecast {
+    background-color: rgb(18, 18, 36);
+    color: white;
 }
