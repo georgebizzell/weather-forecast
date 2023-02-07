@@ -34,6 +34,12 @@ div[class^="col-"] {
     background-color: rgb(240, 240, 239);
 }
 
+.historyItem{
+    background-color: rgb(240, 240, 239);
+    cursor: pointer;
+}
+
+
 /* https://openweathermap.org/weather-conditions */
 
 #WeatherIcon {
