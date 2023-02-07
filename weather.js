@@ -23,9 +23,9 @@ var todayHumidity;
 var searchedCity;
 var city;
 
-var searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
+var searchHistory = [];
 
-const historyArray = [];
+localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
 
 var numberofdays = 5;
 
@@ -33,7 +33,7 @@ function displayHistory () {
 
   $("#history").empty();
 
-  searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
+  var searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
 
   const setSearchHistory = new Set(searchHistory);
 
@@ -99,9 +99,11 @@ $("#search-button").on("click", function(event) {
      console.log("Lat = " + lat);
      console.log("Lon = " + lon);
 
-     // Retrieving the search search history
+    // Retrieve the city's correct name as returned by the respone
      
      currentCity = response[0].name;
+
+    // Retrieving the search history
 
      var searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
 
